@@ -1,6 +1,7 @@
 package notify
 
 import (
+	"github.com/deng00/go-notify/pagerduty"
 	"github.com/deng00/go-notify/pushover"
 	"github.com/deng00/go-notify/slack"
 )
@@ -8,9 +9,10 @@ import (
 type Platform string
 
 const (
-	PlatformSlack    Platform = "slack"
-	PlatformPushover          = "pushover"
-	PlatformDingDing          = "dingding"
+	PlatformSlack     Platform = "slack"
+	PlatformPushover           = "pushover"
+	PlatformDingDing           = "dingding"
+	Platformpagerduty          = "pagerduty"
 )
 
 type Notify struct {
@@ -35,6 +37,8 @@ func (n *Notify) Send(msg string) error {
 		return n.sendPushOverNotify(msg)
 	case PlatformSlack:
 		return n.sendSlackNotify(msg)
+	case Platformpagerduty:
+		return n.sendPagerdutyNotify(msg)
 	default:
 		panic("not supported notify platform")
 	}
@@ -54,6 +58,14 @@ func (n *Notify) sendSlackNotify(msg string) error {
 	app := slack.New(slack.Options{
 		Token:   n.config.Token,
 		Channel: n.config.Channel,
+	})
+	err := app.Send(msg)
+	return err
+}
+
+func (n *Notify) sendPagerdutyNotify(msg string) error {
+	app := pagerduty.New(pagerduty.Options{
+		Token: n.config.Token,
 	})
 	err := app.Send(msg)
 	return err

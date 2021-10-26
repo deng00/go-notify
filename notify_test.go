@@ -35,6 +35,14 @@ func TestNotify_Send(t *testing.T) {
 			}},
 			args{msg: "test case"},
 		},
+		{
+			"test pagerduty notify",
+			fields{config: &Config{
+				Platform: Platform("pagerduty"),
+				Token: os.Getenv("PAGERDUTY_TOKEN"),
+			}},
+			args{msg: "test pagerduty"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
