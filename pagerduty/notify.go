@@ -15,8 +15,10 @@ const (
 )
 
 type Options struct {
-	Token string `json:"token"`
-	Text  string `json:"text"`
+	Token    string `json:"token"`
+	Source   string `json:"source"`
+	Severity string `json:"severity"`
+	Text     string `json:"text"`
 }
 
 type pagerduty struct {
@@ -59,8 +61,8 @@ func (c *client) Send(message string) error {
 	pdOpt := &pagerduty{
 		Payload: payload{
 			Summary:  message,
-			Source:   "monitoringtool:cloudvendor:central-region-dc-01:852559987:cluster/api-stats-prod-003",
-			Severity: "info",
+			Source:   c.opt.Source,
+			Severity: c.opt.Severity,
 		},
 		RoutingKey:  c.opt.Token,
 		EventAction: "trigger",
@@ -93,8 +95,12 @@ func (c *client) Send(message string) error {
 }
 
 func (c *client) check(msg string) error {
-	if c.opt.Token == "" {
-		return errors.New("missing auth token")
+	if c.opt.Token == "" || c.opt.Source == "" {
+		return errors.New("missing config")
+	}
+
+	if  c.opt.Severity == "" {
+		c.opt.Severity = "critical"
 	}
 
 	if msg == "" {
