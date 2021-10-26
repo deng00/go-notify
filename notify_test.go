@@ -36,12 +36,24 @@ func TestNotify_Send(t *testing.T) {
 			args{msg: "test case"},
 		},
 		{
-			"test pagerduty notify",
+			"test pagerduty severity is null",
 			fields{config: &Config{
 				Platform: Platform("pagerduty"),
 				Token: os.Getenv("PAGERDUTY_TOKEN"),
+				Source: "api-test",
+				Severity: "",
 			}},
 			args{msg: "test pagerduty"},
+		},
+		{
+			"test pagerduty severity is error",
+			fields{config: &Config{
+				Platform: Platform("pagerduty"),
+				Token: os.Getenv("PAGERDUTY_TOKEN"),
+				Source: "api-test",
+				Severity: "error",
+			}},
+			args{msg: "test pagerduty is error"},
 		},
 	}
 	for _, tt := range tests {

@@ -23,6 +23,8 @@ type Config struct {
 	Platform Platform
 	Token    string
 	Channel  string
+	Source   string
+	Severity string
 }
 
 func NewNotify(config *Config) *Notify {
@@ -66,6 +68,8 @@ func (n *Notify) sendSlackNotify(msg string) error {
 func (n *Notify) sendPagerdutyNotify(msg string) error {
 	app := pagerduty.New(pagerduty.Options{
 		Token: n.config.Token,
+		Source: n.config.Source,
+		Severity: n.config.Severity,
 	})
 	err := app.Send(msg)
 	return err
