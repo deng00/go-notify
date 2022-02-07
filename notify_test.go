@@ -55,6 +55,17 @@ func TestNotify_Send(t *testing.T) {
 			}},
 			args{msg: "test pagerduty is error"},
 		},
+		{
+			"test discord notify",
+			fields{
+				config: &Config{
+					Platform: Platform("discord"),
+					Token:    os.Getenv("DISCORD_TOKEN"),
+					Channel:  os.Getenv("DISCORD_CHANNEL"),
+				},
+			},
+			args{msg: "test case"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
