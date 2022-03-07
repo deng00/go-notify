@@ -10,11 +10,11 @@ import (
 type Platform string
 
 const (
-	PlatformSlack     Platform = "slack"
-	PlatformPushover           = "pushover"
-	PlatformDingDing           = "dingding"
-	Platformpagerduty          = "pagerduty"
-	PaltformDiscord            = "discord"
+	PlatformSlack     Platform = "Slack"
+	PlatformPushover           = "Pushover"
+	PlatformDingDing           = "DingDing"
+	Platformpagerduty          = "Pagerduty"
+	PaltformDiscord            = "Discord"
 )
 
 type Notify struct {
@@ -71,8 +71,8 @@ func (n *Notify) sendSlackNotify(msg string) error {
 
 func (n *Notify) sendPagerdutyNotify(msg string) error {
 	app := pagerduty.New(pagerduty.Options{
-		Token: n.config.Token,
-		Source: n.config.Source,
+		Token:    n.config.Token,
+		Source:   n.config.Source,
 		Severity: n.config.Severity,
 	})
 	err := app.Send(msg)
