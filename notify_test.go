@@ -39,8 +39,8 @@ func TestNotify_Send(t *testing.T) {
 			"test pagerduty severity is null",
 			fields{config: &Config{
 				Platform: Platform("pagerduty"),
-				Token: os.Getenv("PAGERDUTY_TOKEN"),
-				Source: "api-test",
+				Token:    os.Getenv("PAGERDUTY_TOKEN"),
+				Source:   "api-test",
 				Severity: "",
 			}},
 			args{msg: "test pagerduty"},
@@ -49,8 +49,8 @@ func TestNotify_Send(t *testing.T) {
 			"test pagerduty severity is error",
 			fields{config: &Config{
 				Platform: Platform("pagerduty"),
-				Token: os.Getenv("PAGERDUTY_TOKEN"),
-				Source: "api-test",
+				Token:    os.Getenv("PAGERDUTY_TOKEN"),
+				Source:   "api-test",
 				Severity: "error",
 			}},
 			args{msg: "test pagerduty is error"},
@@ -59,12 +59,25 @@ func TestNotify_Send(t *testing.T) {
 			"test discord notify",
 			fields{
 				config: &Config{
-					Platform: Platform("discord"),
+					Platform: PlatformDiscord,
 					Token:    os.Getenv("DISCORD_TOKEN"),
 					Channel:  os.Getenv("DISCORD_CHANNEL"),
 				},
 			},
 			args{msg: "test case"},
+		},
+		{
+			name: "test telegram notify",
+			fields: fields{
+				config: &Config{
+					Platform: PlatformTelegram,
+					Token:    os.Getenv("TELEGRAM_TOKEN"),
+					Channel:  os.Getenv("TELEGRAM_CHANNEL"),
+				},
+			},
+			args: args{
+				msg: "test case",
+			},
 		},
 	}
 	for _, tt := range tests {
