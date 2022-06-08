@@ -12,11 +12,11 @@ import (
 type Platform string
 
 const (
-	PlatformSlack     Platform = "slack"
-	PlatformPushover           = "pushover"
-	PlatformPagerduty          = "pagerduty"
-	PlatformDiscord            = "discord"
-	PlatformTelegram           = "telegram"
+	PlatformSlack     Platform = "Slack"
+	PlatformPushover           = "Pushover"
+	PlatformPagerduty          = "Pagerduty"
+	PlatformDiscord            = "Discord"
+	PlatformTelegram           = "Telegram"
 )
 
 type Notify struct {
