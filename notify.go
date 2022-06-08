@@ -5,6 +5,8 @@ import (
 	"github.com/deng00/go-notify/pagerduty"
 	"github.com/deng00/go-notify/pushover"
 	"github.com/deng00/go-notify/slack"
+	"github.com/deng00/go-notify/telegram"
+	"strconv"
 )
 
 type Platform string
@@ -12,9 +14,9 @@ type Platform string
 const (
 	PlatformSlack     Platform = "slack"
 	PlatformPushover           = "pushover"
-	PlatformDingDing           = "dingding"
-	Platformpagerduty          = "pagerduty"
-	PaltformDiscord            = "discord"
+	PlatformPagerduty          = "pagerduty"
+	PlatformDiscord            = "discord"
+	PlatformTelegram           = "telegram"
 )
 
 type Notify struct {
@@ -41,10 +43,12 @@ func (n *Notify) Send(msg string) error {
 		return n.sendPushOverNotify(msg)
 	case PlatformSlack:
 		return n.sendSlackNotify(msg)
-	case Platformpagerduty:
+	case PlatformPagerduty:
 		return n.sendPagerdutyNotify(msg)
-	case PaltformDiscord:
+	case PlatformDiscord:
 		return n.sendDiscordNotify(msg)
+	case PlatformTelegram:
+		return n.sendTelegramNotify(msg)
 	default:
 		panic("not supported notify platform")
 	}
@@ -71,8 +75,8 @@ func (n *Notify) sendSlackNotify(msg string) error {
 
 func (n *Notify) sendPagerdutyNotify(msg string) error {
 	app := pagerduty.New(pagerduty.Options{
-		Token: n.config.Token,
-		Source: n.config.Source,
+		Token:    n.config.Token,
+		Source:   n.config.Source,
 		Severity: n.config.Severity,
 	})
 	err := app.Send(msg)
@@ -83,6 +87,16 @@ func (n *Notify) sendDiscordNotify(msg string) error {
 	app := discord.New(discord.Options{
 		Token:   n.config.Token,
 		Channel: n.config.Channel,
+	})
+	err := app.Send(msg)
+	return err
+}
+
+func (n *Notify) sendTelegramNotify(msg string) error {
+	_channel, _ := strconv.ParseInt(n.config.Channel, 10, 64)
+	app := telegram.New(telegram.Options{
+		Token:   n.config.Token,
+		Channel: _channel,
 	})
 	err := app.Send(msg)
 	return err
