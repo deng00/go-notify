@@ -67,7 +67,7 @@ func (c *client) Send(message string) error {
 	if err != nil {
 		return err
 	}
-
+  
 	r := &Resp{}
 	return resp.ToJSON(r)
 }
