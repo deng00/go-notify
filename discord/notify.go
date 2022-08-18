@@ -51,20 +51,23 @@ func (c *client) Send(message string) error {
 		Content: c.opt.Text,
 	}
 
-	inrec, _ := json.Marshal(whMsg)
+	inrec, err := json.Marshal(whMsg)
+	if err != nil {
+		return err
+	}
+
 	params := &req.Param{}
-	json.Unmarshal(inrec, params)
+	err = json.Unmarshal(inrec, params)
+	if err != nil {
+		return err
+	}
 
 	ApiURL = ApiURL + c.opt.Channel + "/" + c.opt.Token
 	resp, err := req.Post(ApiURL, *params)
 	if err != nil {
 		return err
 	}
+  
 	r := &Resp{}
-	err = resp.ToJSON(r)
-
-	if err != nil || err.Error() != "unexpected end of JSON input" {
-		return err
-	}
-	return nil
+	return resp.ToJSON(r)
 }
