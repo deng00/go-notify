@@ -58,7 +58,7 @@ func (c *client) Send(message string) error {
 	ApiURL = ApiURL + c.opt.Channel + "/" + c.opt.Token
 	resp, err := req.Post(ApiURL, *params)
 	if err != nil {
-		return nil
+		return err
 	}
 	r := &Resp{}
 	err = resp.ToJSON(r)
