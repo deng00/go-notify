@@ -79,6 +79,26 @@ func TestNotify_Send(t *testing.T) {
 				msg: "test case",
 			},
 		},
+		{
+			"test dingtalk notify",
+			fields{config: &Config{
+				Platform: PlatformDingTalk,
+				Token:    os.Getenv("DingTalk_TOKEN"),
+				Channel:  os.Getenv("DingTalk_CHANNEL"),
+			}},
+			args{msg: "test case"},
+		},
+		{
+			"test email notify",
+			fields{config: &Config{
+				Platform: PlatformEmail,
+				Token:    os.Getenv("Email_Token"),
+				User:     os.Getenv("Email_User"),
+				Password: os.Getenv("Email_Password"),
+				Host:     os.Getenv("Email_Host"),
+			}},
+			args{msg: "test case"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

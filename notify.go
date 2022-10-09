@@ -1,7 +1,10 @@
 package notify
 
 import (
+	"errors"
+	"github.com/deng00/go-notify/dingtalk"
 	"github.com/deng00/go-notify/discord"
+	"github.com/deng00/go-notify/email"
 	"github.com/deng00/go-notify/pagerduty"
 	"github.com/deng00/go-notify/pushover"
 	"github.com/deng00/go-notify/slack"
@@ -17,6 +20,8 @@ const (
 	PlatformPagerduty          = "Pagerduty"
 	PlatformDiscord            = "Discord"
 	PlatformTelegram           = "Telegram"
+	PlatformDingTalk           = "DingTalk"
+	PlatformEmail              = "Email"
 )
 
 type Notify struct {
@@ -29,6 +34,9 @@ type Config struct {
 	Channel  string
 	Source   string
 	Severity string
+	User     string
+	Password string
+	Host     string
 }
 
 func NewNotify(config *Config) *Notify {
@@ -49,8 +57,12 @@ func (n *Notify) Send(msg string) error {
 		return n.sendDiscordNotify(msg)
 	case PlatformTelegram:
 		return n.sendTelegramNotify(msg)
+	case PlatformDingTalk:
+		return n.sendDingTalkNotify(msg)
+	case PlatformEmail:
+		return n.sendEmailNotify(msg)
 	default:
-		panic("not supported notify platform")
+		return errors.New("not supported notify platform")
 	}
 	return nil
 }
@@ -97,6 +109,26 @@ func (n *Notify) sendTelegramNotify(msg string) error {
 	app := telegram.New(telegram.Options{
 		Token:   n.config.Token,
 		Channel: _channel,
+	})
+	err := app.Send(msg)
+	return err
+}
+
+func (n *Notify) sendDingTalkNotify(msg string) error {
+	app := dingtalk.New(dingtalk.Options{
+		WebhookUrl: n.config.Channel,
+		Secret:     n.config.Token,
+	})
+	err := app.Send(msg)
+	return err
+}
+
+func (n *Notify) sendEmailNotify(msg string) error {
+	app := email.New(email.Options{
+		ToEmail:  n.config.Token,
+		User:     n.config.User,
+		Password: n.config.Password,
+		Host:     n.config.Host,
 	})
 	err := app.Send(msg)
 	return err
