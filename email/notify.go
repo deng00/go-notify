@@ -57,10 +57,10 @@ func (c *client) Send(message string) error {
 	cc := []string{}
 	bcc := []string{}
 
-	mailType := "html"
+	mailType := "text"
 	replyToAddress := c.opt.User
 
-	body := `<html><body><h3>` + content + `</h3></body></html>`
+	body := content
 
 	if err := SendToMail(user, password, host, subject, body, mailType, replyToAddress, to, cc, bcc); err != nil {
 		return errors.New("send email error: " + err.Error())
