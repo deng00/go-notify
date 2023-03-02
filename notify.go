@@ -10,6 +10,7 @@ import (
 	"github.com/deng00/go-notify/slack"
 	"github.com/deng00/go-notify/telegram"
 	"strconv"
+	"strings"
 )
 
 type Platform string
@@ -105,10 +106,20 @@ func (n *Notify) sendDiscordNotify(msg string) error {
 }
 
 func (n *Notify) sendTelegramNotify(msg string) error {
-	_channel, _ := strconv.ParseInt(n.config.Channel, 10, 64)
+	var _channel int64
+	var _chatName string
+	if strings.Contains(n.config.Channel, "@") {
+		_channel = 0
+		_chatName = n.config.Channel
+	} else {
+		_channel, _ = strconv.ParseInt(n.config.Channel, 10, 64)
+		_chatName = ""
+	}
+
 	app := telegram.New(telegram.Options{
-		Token:   n.config.Token,
-		Channel: _channel,
+		Token:    n.config.Token,
+		Channel:  _channel,
+		ChatName: _chatName,
 	})
 	err := app.Send(msg)
 	return err
