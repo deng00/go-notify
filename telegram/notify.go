@@ -15,8 +15,9 @@ const (
 
 // Options allows full configuration of the message sent to the Pushover API
 type Options struct {
-	Token   string `json:"token"`
-	Channel int64  `json:"channel"`
+	Token    string `json:"token"`
+	Channel  int64  `json:"channel"`
+	ChatName string `json:"chat_name"`
 	// User may be either a user key or a group key.
 }
 
@@ -47,7 +48,13 @@ func (c *client) Send(message string) error {
 	if message == "" {
 		return errors.New("missing message")
 	}
-	msg := tgbotapi.NewMessage(c.opt.Channel, message)
+	var msg tgbotapi.MessageConfig
+	if c.opt.Channel != 0 {
+		msg = tgbotapi.NewMessage(c.opt.Channel, message)
+	} else {
+		msg = tgbotapi.NewMessageToChannel(c.opt.ChatName, message)
+	}
+
 	sendRes, err := c.bot.Send(msg)
 	if err != nil {
 		return err
